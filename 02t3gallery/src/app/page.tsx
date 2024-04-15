@@ -1,5 +1,6 @@
 import Link from "next/link";
-import Image from "next/image";
+import { db } from "~/server/db";
+
 
 const mockUrls = [
   "https://images.unsplash.com/photo-1712926202850-0fa7ee55b4d3?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -14,15 +15,23 @@ const mockImages = mockUrls.map((url, index) => ({
 }))
 
 
-export default function HomePage() {
+export default async function HomePage() {
+  const posts = await db.query.posts.findMany();
+
+
   return (
     <main className="">
       <h2 className="p-4">Hello (Gallery in progress)</h2>
       <div className="flex flex-wrap gap-2">
-        {mockImages.map((image) => (
-          <div key={image.id} className="w-48">
+        {mockImages.map((image, index) => (
+          <div key={image.id + index} className="w-48">
             <img src={image.url} alt="image" />
           </div>
+        ))}
+      </div>
+      <div>
+        {posts.map((post) => (
+          <div key={post.id}>{post.name}</div>
         ))}
       </div>
     </main>
